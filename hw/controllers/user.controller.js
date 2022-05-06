@@ -1,35 +1,39 @@
-let DBUsers = require("../dataBase/users");
+let User = require("../dataBase/User.model");
 
 module.exports = {
-    getAllUsers: (req, res) => {
-        res.render('users', {DBUsers});
+    getAllUsers: async (req, res) => {
+        const users = await User.find();
+
+        res.json(users);
     },
 
-    getUserById: (req, res) => {
-        const {userIndex} = req.params;
+    getUserById: async (req, res) => {
+        const {userId} = req.params;
+        const user = await User.findById(userId);
 
-        res.json(DBUsers[userIndex]);
+        res.json(user);
     },
 
-    createUser: (req, res) => {
-        DBUsers.push(req.body);
+    createUser: async (req, res) => {
+        const createUser = await User.create(req.body);
 
-        res.json(DBUsers);
+        res.json(createUser);
     },
 
-    updateUser: (req, res) => {
-        const {userIndex} = req.params;
+    updateUser: async (req, res) => {
+        const {userId} = req.params;
+        const updateUser = await User.updateOne(
+            {_id: userId},
+            {$set: req.body}
+        );
 
-        Object.assign(DBUsers[userIndex], req.body);
-
-        res.json(DBUsers);
+        res.json(updateUser);
     },
 
-    deleteUser: (req, res) => {
-        const {userIndex} = req.params;
+    deleteUser: async (req, res) => {
+        const {userId} = req.params;
+        const deleteUser = await User.deleteOne({_id: userId});
 
-        DBUsers = DBUsers.filter((_, index) => Number(userIndex) !== index);
-
-        res.json(DBUsers);
+        res.json(deleteUser);
     }
 }
