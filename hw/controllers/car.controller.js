@@ -1,63 +1,64 @@
-let Car = require("../dataBase/Car.model");
+const Car = require("../dataBase/Car.model");
 
 module.exports = {
-    getAllCars: async (req, res) => {
-        try {
-            const cars = await Car.find();
+  getAllCars: async (req, res, next) => {
+    try {
+      const {limit = 20, page = 1} = req.query;
+      const skip = (page - 1) * limit;
+      const cars = await Car.find().limit(limit).skip(skip);
+      const count = await Car.count({})
 
-            res.json(cars);
-        } catch (e) {
-            res.json(e.message);
-        }
-    },
-
-    getCarById: async (req, res) => {
-        try {
-            const {carId} = req.params;
-            const car = await Car.findById(carId);
-
-            res.json(car);
-        } catch (e) {
-            res.json(e.message);
-        }
-    },
-
-    createCar: async (req, res) => {
-        try {
-            const createCar = await Car.create(req.body);
-
-            res.json(createCar);
-        } catch (e) {
-            res.json(e.message);
-        }
-    },
-
-    updateCar: async (req, res) => {
-        try {
-            const {carId} = req.params;
-            const updateCar = await Car.updateOne(
-                {_id: carId},
-                {$set: req.body}
-            );
-
-            // Object.assign(DBCars[carId], req.body);
-
-            res.json(updateCar);
-        } catch (e) {
-            res.json(e.message);
-        }
-    },
-
-    deleteCar: async (req, res) => {
-        try {
-            const {carId} = req.params;
-            const deleteCar = await Car.deleteOne({_id: carId});
-
-            // DBCars = DBCars.filter((_, index) => Number(userId) !== index);
-
-            res.json(deleteCar);
-        } catch (e) {
-            res.json(e.message);
-        }
+      res.json({
+        page,
+        perPage: limit,
+        count,
+        data: cars
+      });
+    } catch (e) {
+      next(e);
     }
+  },
+
+  getCarById: (req, res, next) => {
+    try {
+      res.json(req.car);
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  createCar: async (req, res, next) => {
+    try {
+      const createCar = await Car.create(req.body);
+
+      res.json(createCar);
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  updateCar: async (req, res, next) => {
+    try {
+      const {carId} = req.params;
+      const updateCar = await Car.updateOne(
+        {_id: carId},
+        {$set: req.body}
+      );
+
+      res.json(updateCar);
+    } catch (e) {
+      next(e);
+    }
+  },
+
+  deleteCar: async (req, res, next) => {
+    try {
+      const {carId} = req.params;
+      const deleteCar = await Car.deleteOne({_id: carId});
+
+      res.json(deleteCar);
+    } catch (e) {
+      next(e);
+    }
+  }
 }

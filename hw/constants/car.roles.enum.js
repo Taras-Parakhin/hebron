@@ -1,5 +1,5 @@
 module.exports = {
-    SEDAN: 'sedan',
-    BUS: 'bus',
-    VEN: 'ven'
+  SEDAN: 'sedan',
+  BUS: 'bus',
+  VEN: 'ven'
 }
