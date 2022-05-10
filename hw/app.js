@@ -3,7 +3,7 @@ const {engine} = require("express-handlebars");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-dotenv.config({path: '/.env'});
+dotenv.config();
 
 const {PORT, MONGODB_URL} = require('./config/config');
 const userRouter = require('./routes/user.router');
@@ -43,3 +43,9 @@ function _mainErrorHandler(err, req, res, next) {
 app.listen(PORT, () => {
   console.log(`App listen ${PORT}`);
 });
+
+// TODO
+// KISS
+// YAGNI
+// TODO OPTIONAL
+// SOLID
