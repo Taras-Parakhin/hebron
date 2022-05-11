@@ -1,17 +1,18 @@
 const {Router} = require('express');
 
-const carController = require('../controllers/car.controller');
+const {carController} = require('../controllers');
 const {
-  emptyField,
-  validYear,
-  validId,
-  existId
-} = require('../middlewares/car.middleware');
+  carMiddleware: {
+    newCarValidator,
+    validId,
+    existId
+  }
+} = require('../middlewares');
 
 const carRouter = Router();
 
 carRouter.get('/', carController.getAllCars);
-carRouter.post('/', emptyField, validYear, carController.createCar);
+carRouter.post('/', newCarValidator, carController.createCar);
 
 carRouter.all('/:carId', validId, existId);
 carRouter.get('/:carId', carController.getCarById);

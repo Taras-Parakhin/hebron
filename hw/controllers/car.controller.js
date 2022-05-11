@@ -1,9 +1,16 @@
-const Car = require("../dataBase/Car.model");
+const {Car} = require('../dataBase');
+const ApiError = require('../error/apiError');
 
 module.exports = {
   getAllCars: async (req, res, next) => {
     try {
       const {limit = 20, page = 1} = req.query;
+
+      if (limit < 0 || page < 0) {
+        next(new ApiError('Not valid query parameters', 400));
+        return;
+      }
+
       const skip = (page - 1) * limit;
       const cars = await Car.find().limit(limit).skip(skip);
       const count = await Car.count({})

@@ -6,8 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const {PORT, MONGODB_URL} = require('./config/config');
-const userRouter = require('./routes/user.router');
-const carRouter = require('./routes/car.router');
+const {userRouter, carRouter} = require('./routes');
 
 const app = express();
 
@@ -31,6 +30,7 @@ function _notFoundHandler(req, res, next) {
   next(new Error('Not found'));
 }
 
+// eslint-disable-next-line no-unused-vars
 function _mainErrorHandler(err, req, res, next) {
   res
     .status(err.status || 500)

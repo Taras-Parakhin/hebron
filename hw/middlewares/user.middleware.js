@@ -1,39 +1,27 @@
 const User = require('../dataBase/User.model');
 const ApiError = require('../error/apiError');
+const {userValidator} = require('../validators');
 
-const emptyField = (req, res, next) => {
+const newUserValidator = (req, res, next) => {
   try {
-    const {name, email} = req.body;
+    const {error, value} = userValidator.newUserJoiSchema.validate(req.body);
 
-    if (!name || !email) {
-      next(new ApiError('All fields must be filled', 400));
+    if (error.message) {
+      next(new ApiError(error.details[0].message, 400));
       return;
     }
+
+    req.body = value;
 
     next();
   } catch (e) {
     next(e);
   }
-};
-
-const validEmail = (req, res, next) => {
-  try {
-    const {email} = req.body;
-
-    if (!email.includes('@')) {
-      next(new ApiError('Not valid email', 400));
-      return;
-    }
-
-    next();
-  } catch (e) {
-    next(e);
-  }
-};
+}
 
 const duplicateEmail = async (req, res, next) => {
   try {
-    const {email = ''} = req.body;
+    const {email} = req.body;
     const isUserPresent = await User.findOne({email: email.toLocaleLowerCase().trim()});
 
     if (isUserPresent) {
@@ -81,8 +69,7 @@ const existId = async (req, res, next) => {
 }
 
 module.exports = {
-  emptyField,
-  validEmail,
+  newUserValidator,
   duplicateEmail,
   validId,
   existId

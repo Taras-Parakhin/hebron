@@ -1,18 +1,19 @@
 const {Router} = require('express');
 
-const userController = require('../controllers/user.controller');
+const {userController} = require('../controllers');
 const {
-  emptyField,
-  validEmail,
-  duplicateEmail,
-  validId,
-  existId
-} = require('../middlewares/user.middleware');
+  userMiddleware: {
+    newUserValidator,
+    duplicateEmail,
+    validId,
+    existId
+  }
+} = require('../middlewares');
 
 const userRouter = Router();
 
 userRouter.get('/', userController.getAllUsers);
-userRouter.post('/', emptyField, validEmail, duplicateEmail, userController.createUser);
+userRouter.post('/', newUserValidator, duplicateEmail, userController.createUser);
 
 userRouter.all('/:userId', validId, existId);
 userRouter.get('/:userId', userController.getUserById);

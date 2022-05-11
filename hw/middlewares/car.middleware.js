@@ -1,29 +1,17 @@
 const Car = require('../dataBase/Car.model');
 const ApiError = require('../error/apiError');
+const {carValidator} = require('../validators');
 
-const emptyField = (req, res, next) => {
+const newCarValidator = (req, res, next) => {
   try {
-    const {model, year} = req.body;
+    const {error, value} = carValidator.newCarJoiSchema.validate(req.body);
 
-    if (!model || !year) {
-      next(new ApiError('All fields must be filled', 400));
+    if (error.message) {
+      next(new ApiError(error.details[0].message, 400));
       return;
     }
 
-    next();
-  } catch (e) {
-    next(e);
-  }
-};
-
-const validYear = (req, res, next) => {
-  try {
-    const {year} = req.body;
-
-    if (!Number(year) && year < 1900 && year > 2022) {
-      next(new ApiError('Not valid year', 400));
-      return;
-    }
+    req.body = value;
 
     next();
   } catch (e) {
@@ -65,8 +53,7 @@ const existId = async (req, res, next) => {
 }
 
 module.exports = {
-  emptyField,
-  validYear,
+  newCarValidator,
   validId,
   existId
 };

@@ -1,10 +1,18 @@
-const User = require('../dataBase/User.model');
+const {User} = require('../dataBase');
+const {authService} = require('../service');
+const ApiError = require('../error/apiError');
 
 module.exports = {
   getAllUsers: async (req, res, next) => {
     try {
       const {limit = 20, page = 1} = req.query;
-      const skip = (page - 1) * limit
+
+      if (limit < 0 || page < 0) {
+        next(new ApiError('Not valid query parameters', 400));
+        return;
+      }
+
+      const skip = (page - 1) * limit;
       const users = await User.find().limit(limit).skip(skip);
       const count = await User.count({})
 
@@ -29,7 +37,8 @@ module.exports = {
 
   createUser: async (req, res, next) => {
     try {
-      const createUser = await User.create(req.body);
+      const hashPassword = await authService.hashPassword(req.body.password);
+      const createUser = await User.create({...req.body, password: hashPassword});
 
       res.json(createUser);
     } catch (e) {
