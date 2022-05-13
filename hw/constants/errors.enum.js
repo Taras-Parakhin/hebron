@@ -1,0 +1,5 @@
+module.exports = {
+  OBJ_NOT_FOUND: 'The object was not found',
+  NOT_VALID_ID: 'Not valid id',
+  CONFLICT_EMAIL: 'email already exists'
+}

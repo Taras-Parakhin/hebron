@@ -1,13 +1,42 @@
 const User = require('../dataBase/User.model');
 const ApiError = require('../error/apiError');
-const {userValidator} = require('../validators');
+const {userJoiSchemas} = require('../validators');
+const {
+  errorsEnum: {
+    NOT_VALID_ID,
+    OBJ_NOT_FOUND,
+    CONFLICT_EMAIL
+  },
+  statusErrorEnum: {
+    BAD_REQUEST,
+    NOT_FOUND,
+    CONFLICT
+  }
+} = require('../constants');
 
-const newUserValidator = (req, res, next) => {
+const createUserValidator = (req, res, next) => {
   try {
-    const {error, value} = userValidator.newUserJoiSchema.validate(req.body);
+    const {error, value} = userJoiSchemas.createUserJoiSchema.validate(req.body);
 
-    if (error.message) {
-      next(new ApiError(error.details[0].message, 400));
+    if (error) {
+      next(new ApiError(error.details[0].message, BAD_REQUEST));
+      return;
+    }
+
+    req.body = value;
+
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
+const updateUserValidator = (req, res, next) => {
+  try {
+    const {error, value} = userJoiSchemas.updateUserJoiSchema.validate(req.body);
+
+    if (error) {
+      next(new ApiError(error.details[0].message, BAD_REQUEST));
       return;
     }
 
@@ -25,7 +54,7 @@ const duplicateEmail = async (req, res, next) => {
     const isUserPresent = await User.findOne({email: email.toLocaleLowerCase().trim()});
 
     if (isUserPresent) {
-      next(new ApiError('User with this email already exists', 409));
+      next(new ApiError(CONFLICT_EMAIL, CONFLICT));
       return;
     }
 
@@ -40,7 +69,7 @@ const validId = (req, res, next) => {
     const {userId} = req.params;
 
     if (userId.length !== 24) {
-      next(new ApiError('Not valid id', 400));
+      next(new ApiError(NOT_VALID_ID, BAD_REQUEST));
       return;
     }
 
@@ -56,7 +85,7 @@ const existId = async (req, res, next) => {
     const userById = await User.findById(userId);
 
     if (!userById) {
-      next(new ApiError('User is not found', 404));
+      next(new ApiError(OBJ_NOT_FOUND, NOT_FOUND));
       return;
     }
 
@@ -69,7 +98,8 @@ const existId = async (req, res, next) => {
 }
 
 module.exports = {
-  newUserValidator,
+  createUserValidator,
+  updateUserValidator,
   duplicateEmail,
   validId,
   existId

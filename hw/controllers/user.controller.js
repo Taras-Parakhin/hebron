@@ -1,18 +1,12 @@
 const {User} = require('../dataBase');
 const {authService} = require('../service');
-const ApiError = require('../error/apiError');
 
 module.exports = {
   getAllUsers: async (req, res, next) => {
     try {
       const {limit = 20, page = 1} = req.query;
-
-      if (limit < 0 || page < 0) {
-        next(new ApiError('Not valid query parameters', 400));
-        return;
-      }
-
       const skip = (page - 1) * limit;
+
       const users = await User.find().limit(limit).skip(skip);
       const count = await User.count({})
 
