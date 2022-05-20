@@ -3,6 +3,7 @@ const {authJoiSchema} = require('../validators');
 const {OAuth} = require('../dataBase');
 const ApiError = require('../error/apiError');
 const {tokenTypeEnum} = require("../constants");
+const {errorsEnum, statusErrorEnum} = require('../constants');
 
 const checkAccessToken = async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ const checkAccessToken = async (req, res, next) => {
     const tokenData = await OAuth.findOne({access_token}).populate('user_id');
 
     if (!tokenData || !tokenData.user_id) {
-      next(new ApiError('Not valid token', 401));
+      next(new ApiError(errorsEnum.NO_VALID_TOKEN, statusErrorEnum.UNAUTHORIZED));
       return;
     }
 
@@ -34,7 +35,7 @@ const checkRefreshToken = async (req, res, next) => {
     const tokenData = await OAuth.findOne({refresh_token}).populate('user_id');
 
     if (!tokenData || !tokenData.user_id) {
-      next(new ApiError('Not valid token', 401));
+      next(new ApiError(errorsEnum.NO_VALID_TOKEN, statusErrorEnum.UNAUTHORIZED));
       return;
     }
 

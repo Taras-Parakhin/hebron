@@ -24,9 +24,7 @@ module.exports = {
 
   refresh: async (req, res, next) => {
     try {
-      const {user, body: {password}} = req;
-
-      await authService.comparePasswords(user.password, password);
+      const {user} = req;
 
       const tokenPair = authService.generateTokenPair({userId: user._id});
 
