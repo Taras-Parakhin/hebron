@@ -24,15 +24,15 @@ module.exports = {
 
   refresh: async (req, res, next) => {
     try {
-      const {user} = req;
+      const {authUser} = req;
 
-      const tokenPair = authService.generateTokenPair({userId: user._id});
+      const tokenPair = authService.generateTokenPair({userId: authUser._id});
 
-      await OAuth.create({user_id: user._id, ...tokenPair});
+      await OAuth.create({user_id: authUser._id, ...tokenPair});
 
       res.json({
         ...tokenPair,
-        user
+        authUser
       });
 
     } catch (e) {
