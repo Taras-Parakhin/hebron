@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const {PORT, MONGODB_URL} = require('./config/config');
-const {userRouter, carRouter} = require('./routes');
+const {authRouter, userRouter, carRouter} = require('./routes');
 
 const app = express();
 
@@ -21,6 +21,7 @@ mongoose.connect(MONGODB_URL).then(() => {
   console.log('Connection success');
 });
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/cars', carRouter);
 app.use('*', _notFoundHandler);

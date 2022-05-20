@@ -46,7 +46,7 @@ const updateUserValidator = (req, res, next) => {
   } catch (e) {
     next(e);
   }
-}
+};
 
 const duplicateEmail = async (req, res, next) => {
   try {
@@ -79,28 +79,35 @@ const validId = (req, res, next) => {
   }
 };
 
-const existId = async (req, res, next) => {
+const getUserDynamically = (paramName = '_id', where = 'body', dataBaseField = paramName) => async (req, res, next) => {
   try {
-    const {userId} = req.params;
-    const userById = await User.findById(userId);
+    const findObject = req[where];
 
-    if (!userById) {
+    if (!findObject || typeof findObject !== 'object') {
+      next(new ApiError('Wrong search param in middleware'));
+      return;
+    }
+
+    const param = findObject[paramName];
+    const user = await User.findOne({[dataBaseField]: param}).select('+password');
+
+    if (!user) {
       next(new ApiError(OBJ_NOT_FOUND, NOT_FOUND));
       return;
     }
 
-    req.user = userById;
+    req.user = user;
 
     next();
   } catch (e) {
     next(e);
   }
-}
+};
 
 module.exports = {
+  getUserDynamically,
   createUserValidator,
   updateUserValidator,
   duplicateEmail,
-  validId,
-  existId
+  validId
 };

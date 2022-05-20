@@ -1,7 +1,8 @@
 module.exports = {
-  constants: require('./constants'),
-  userRolesEnum: require('./user.roles.enum'),
   carRolesEnum: require('./car.roles.enum'),
-  statusErrorEnum: require('./status.errors.enum'),
+  constants: require('./constants'),
   errorsEnum: require('./errors.enum'),
+  statusErrorEnum: require('./status.errors.enum'),
+  tokenTypeEnum: require('./token-type.enum'),
+  userRolesEnum: require('./user.roles.enum'),
 }
