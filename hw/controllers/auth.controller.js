@@ -19,7 +19,6 @@ module.exports = {
         ...tokenPair,
         user
       });
-
     } catch (e) {
       next(e);
     }
@@ -37,7 +36,6 @@ module.exports = {
         ...tokenPair,
         authUser
       });
-
     } catch (e) {
       next(e);
     }
@@ -48,7 +46,6 @@ module.exports = {
       await OAuth.deleteMany({user_id: req.authUser._id});
 
       res.json('Ok');
-
     } catch (e) {
       next(e);
     }
