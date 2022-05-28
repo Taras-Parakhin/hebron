@@ -4,9 +4,10 @@ module.exports = {
 
   ACCESS_TOKEN_SECRET: 'TOKEN_SECRET',
   REFRESH_TOKEN_SECRET: 'REFRESH_SECRET',
+  ACTION_TOKEN_SECRET: 'ACTION_TOKEN',
 
   SYSTEM_MAIL: process.env.SYSTEM_MAIL || '',
   SYSTEM_MAIL_PASSWORD: process.env.SYSTEM_MAIL_PASSWORD || '',
 
-  FRONTEND_URL: 'https://google.com'
+  FRONTEND_URL: 'http://localhost:3000'
 }

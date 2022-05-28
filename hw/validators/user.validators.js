@@ -12,11 +12,10 @@ const createUserJoiSchema = Joi.object({
 const updateUserJoiSchema = Joi.object({
   name: Joi.string().alphanum().min(2).max(50),
   email: Joi.string().regex(constants.EMAIL_REGEXP).trim().lowercase(),
-  age: Joi.number().integer().min(6),
-  password: Joi.string().regex(constants.PASSWORD_REGEXP)
-})
+  age: Joi.number().integer().min(6)
+});
 
 module.exports = {
   createUserJoiSchema,
-  updateUserJoiSchema
+  updateUserJoiSchema,
 }

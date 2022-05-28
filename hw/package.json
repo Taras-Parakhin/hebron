@@ -12,8 +12,9 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.4",
     "@types/email-templates": "^8.0.4",
+    "@types/nodemailer": "^6.4.4",
+    "@types/mongoose": "^5.11.97",
     "eslint": "^8.15.0"
   }
 }
