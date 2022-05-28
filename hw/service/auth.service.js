@@ -16,7 +16,7 @@ const comparePasswords = async (hashPassword, password) => {
 const hashPassword = password => bcrypt.hash(password, 10);
 
 const generateTokenPair = (encodeDate = {}) => {
-  const access_token = jwt.sign(encodeDate, ACCESS_TOKEN_SECRET, {expiresIn: '15m'});
+  const access_token = jwt.sign(encodeDate, ACCESS_TOKEN_SECRET, {expiresIn: '15d'});
   const refresh_token = jwt.sign(encodeDate, REFRESH_TOKEN_SECRET, {expiresIn: '30d'});
 
   return {

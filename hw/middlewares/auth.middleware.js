@@ -85,7 +85,7 @@ const validEmail = (req, res, next) => {
 
 const validPassword = async (req, res, next) => {
   try {
-    const {authUser: {_id}, body: {password}} = req;
+    const {user, body: {password}} = req;
     const {error} = authJoiSchema.changePasswordJoiSchema.validate(req.body);
 
     if (error) {
@@ -93,7 +93,6 @@ const validPassword = async (req, res, next) => {
       return;
     }
 
-    const user = await User.findOne({_id}).select('+password');
     await authService.comparePasswords(user.password, password);
 
     next();

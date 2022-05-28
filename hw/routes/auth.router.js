@@ -31,6 +31,10 @@ authRouter.post('/logout', checkAccessToken, logout);
 
 authRouter.post('/password/forgot', validEmail, getUserDynamically('email'), forgotPassword);
 authRouter.patch('/password/forgot', checkActionToken(FORGOT_PASSWORD, forgotPasswordJoiSchema), setPasswordAfterForgot);
-authRouter.patch('/password/change', checkAccessToken, validPassword, changePassword);
+authRouter.patch('/password/change',
+  checkAccessToken,
+  getUserDynamically('_id', 'authUser'),
+  validPassword,
+  changePassword);
 
 module.exports = authRouter;
